@@ -10,7 +10,7 @@ type Filename = Filename of string
 
 module Handler =
     module private Imported =
-        [<DllImport( "user32.dll", CharSet = CharSet.Auto, SetLastError = true)>]
+        [<DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)>]
         extern void SystemParametersInfo(int uAction, int uParam, string lpvParam, int fuWinIni);
 
     let private BaseURL = "https://www.bing.com"
@@ -18,9 +18,9 @@ module Handler =
     let getImageURL =
         let req = HttpWebRequest.Create(BaseURL)
         let resp = req.GetResponse()
-        let body = resp.GetResponseStream()
+        let content = resp.GetResponseStream()
         let html = new HtmlDocument()
-        use reader = new StreamReader(body)
+        use reader = new StreamReader(content)
         do html.LoadHtml(reader.ReadToEnd())
         let doc = html.DocumentNode;
         let link = doc.SelectSingleNode("//link[@id='bgLink']")
