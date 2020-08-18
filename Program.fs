@@ -23,7 +23,7 @@ module Handler =
         use reader = new StreamReader(content)
         do html.LoadHtml(reader.ReadToEnd())
         let doc = html.DocumentNode;
-        let link = doc.SelectSingleNode("//link[@id='bgLink']")
+        let link = doc.SelectSingleNode("//link[@id='preloadBg']")
         if link = null then
             None
         else
