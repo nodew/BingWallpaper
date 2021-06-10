@@ -1,6 +1,6 @@
 ﻿$taskName = "UpdateWallpaperFromBing"
 $description = "Update desktop wallpaper from bing"
-$release = ".\bin\Release\netcoreapp2.2\win10-x64"
+$release = ".\bin\Release\net5.0\win-x64\publish"
 $destination = "C:\Program Files\BingWallpaper"
 $command = "Start-Process -FilePath '$destination\BingWallpaper.exe' -WindowStyle Hidden"
 
@@ -8,6 +8,11 @@ $command = "Start-Process -FilePath '$destination\BingWallpaper.exe' -WindowStyl
 if ((Test-Path $destination) -eq $false) {
     New-Item $destination -ItemType "directory"
 }
+else
+{
+    Remove-Item "$destination\*"
+}
+
 Get-ChildItem -Path $release | Copy-Item -Destination $destination -Recurse -Force
 
 # Unregister existed task
@@ -18,9 +23,11 @@ if ($TaskExists) {
 
 # Register scheduledTask
 $action = New-ScheduledTaskAction -Execute "powershell.exe" `
-                                    -Argument "-Command `"$command`""
-$trigger =  New-ScheduledTaskTrigger -Daily -At 8am
+                                  -Argument "-Command `"$command`""
+
+$trigger =  New-ScheduledTaskTrigger -Daily -At 10am
+
 Register-ScheduledTask -Action $action `
-                        -Trigger $trigger `
-                        -TaskName $taskName `
-                        -Description $description `
+                       -Trigger $trigger `
+                       -TaskName $taskName `
+                       -Description $description `
